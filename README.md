@@ -29,11 +29,11 @@ You initialize the library by calling: **video_start( int nframebuffer )**.  If 
 ```bash
 ls /dev/fb*
 ```
-To obtain a buffer to draw in, call **video_get_empty_buffer( VIDEO v )**.
+To obtain a buffer to draw in, call **video_get_empty_buffer()**.
 
-To display your buffer on the next scanout, call **video_submit_frame( VIDEO v, void *buf_pixels )**.
+To display your buffer on the next scanout, call **video_submit_frame()**.
 
-To get a copy of what's currently displayed on the screen, call **video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len )**
+To get a copy of what's currently displayed on the screen, call **video_get_current_pixel_data()**
 
 So a basic program flow would be (see **tests/video_test.c** for complete demo):
 ```C
