@@ -59,6 +59,13 @@ video_get_current_pixel_data(
 /* Fill your buffer with yellow pixels */
 for (; i < video_get_pixel_count(v); i++) {
   prerenderbuff[i] = 0xFFFFFF00;
+  /*                   ||||||^^-- 8 bits that represent the color BLUE.
+                       |||| +---- 8 bits that represent the color GREEN.
+                       || +------ 8 bits that represent the color RED.    
+                        +-------- 8 bits (alpha) unused as far as physical 
+                                  display (although the test program shows 
+                                  you how to alpha blend)
+  */
 }
 
 video_submit_frame(v, prerenderbuff);  /* Turn screen yellow */
