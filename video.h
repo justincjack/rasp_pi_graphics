@@ -33,8 +33,24 @@
  * Tested on Raspberry Pi 4B 4GB RAM running Raspian Lite -
  * Buster.
  * 
+ * Quick Function list (See actual definitions below comments for more info):
  * 
- * 
+ * VIDEO       video_start( int framebuffer );
+ * void        video_stop( VIDEO v );
+ * void        video_submit_frame( VIDEO v, void *buf_pixels );
+ * int         video_get_width( VIDEO v );
+ * int         video_get_height( VIDEO v );
+ * int         video_get_bpp( VIDEO v );
+ * size_t      video_get_req_buffer_size( VIDEO v );
+ * void        *video_get_empty_buffer( VIDEO v );
+ * int         video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len );
+ * void        video_clear_screen( VIDEO v );
+ * void        video_screen_white( VIDEO v );
+ * int         video_is_active( VIDEO v );
+ * void        *video_get_raw_ptr( VIDEO v );
+ * size_t      video_get_stride_pitch( VIDEO v );
+ * int         video_get_fb_var_screeninfo( VIDEO v, void *pdest, size_t buf_len );
+ * int         video_get_fb_fix_screeninfo( VIDEO v, void *pdest, size_t buf_len );
  * 
  **/ 
 
