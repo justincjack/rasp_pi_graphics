@@ -35,6 +35,47 @@ To display your buffer on the next scanout, call **video_submit_frame( VIDEO v, 
 
 To get a copy of what's currently displayed on the screen, call **video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len )**
 
+So a basic program flow would be (see **tests/video_test.c** for complete demo):
+```C
+VIDEO     v;
+uint32_t  *prerenderbuff,
+          *existing_pixel_data;
+int       i;
+
+v = video_start(0); /* Start lib, gain access to video display */
+
+/* Get a buffer sized for the screen */
+prerenderbuff = video_get_empty_buffer(v);
+
+/* Get another to hold current screen image */
+existing_pixel_data = video_get_empty_buffer(v); 
+
+/* Save the current screen image before we change it */
+video_get_current_pixel_data(
+        v, 
+        existing_pixel_data, 
+        video_get_req_buffer_size(v));
+
+/* Fill your buffer with yellow pixels */
+for (; i < video_get_pixel_count(v); i++) {
+  prerenderbuff[i] = 0xFFFFFF00;
+}
+
+video_submit_frame(v, prerenderbuff);  /* Turn screen yellow */
+
+usleep(5000000);  /* Wait five seconds */
+
+video_submit_frame(v, existing_pixel_data); /* Restore old screen */
+
+video_stop(v); /* Shutdown library */
+
+free(prerenderbuff);
+
+free(existing_pixel_data);
+
+```
+
+
 ### ***_Important_***
 When you're done using the library, don't forget to call **video_stop( VIDEO v )** to restore the way the terminal works correctly.
 
