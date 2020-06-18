@@ -46,9 +46,11 @@
  * int         video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len );
  * void        video_clear_screen( VIDEO v );
  * void        video_screen_white( VIDEO v );
+ * void        video_set_screen_color( VIDEO v, uint32_t color);
  * int         video_is_active( VIDEO v );
  * void        *video_get_raw_ptr( VIDEO v );
  * size_t      video_get_stride_pitch( VIDEO v );
+ * size_t      video_get_pixel_count( VIDEO v );
  * int         video_get_fb_var_screeninfo( VIDEO v, void *pdest, size_t buf_len );
  * int         video_get_fb_fix_screeninfo( VIDEO v, void *pdest, size_t buf_len );
  * 
@@ -170,6 +172,14 @@ void        video_clear_screen( VIDEO v );
 void        video_screen_white( VIDEO v );
 
 /**
+ * Set the screen to a solid color given by "color"
+ *
+ * \param uint32_t color
+ * An RGB color to which the screen will be set.
+ **/
+void        video_set_screen_color( VIDEO v, uint32_t color);
+  
+/**
  * \return ONE if the VIDEO handle is valid,
  * ZERO otherwise.
  **/ 
@@ -192,7 +202,14 @@ void        *video_get_raw_ptr( VIDEO v );
  **/ 
 size_t      video_get_stride_pitch( VIDEO v );
 
-
+/**
+ * \return size_t
+ * The number of pixels contained by the display
+ * in its current video mode.  The VIDEO handle
+ * must be valid or ZERO will be returned.
+ **/
+size_t      video_get_pixel_count( VIDEO v );
+    
 /**
  * Get the underlying fb_var_screeninfo struct information.
  * 
