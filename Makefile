@@ -45,6 +45,9 @@ install:
         @cp lib/libvideo.a /usr/local/lib
         @cp shared/libvideo.so /usr/local/lib
         @ldconfig -n /usr/local/lib
+        @ln -s /usr/local/lib/libvideo.so /usr/lib/libvideo.so
+        @ln -s /usr/local/lib/libvideo.a /usr/lib/libvideo.a
+        @ln -s /usr/local/include/video.h /usr/inclide/video.h
         @echo "";
         @echo "    \033[1;32mSuccess!\033[0m"
         @echo "";
