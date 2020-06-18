@@ -55,7 +55,8 @@ struct video_setup {
                         width,
                         height;
 
-    union px_pointer    ptr;
+    union px_pointer    ptr,
+                        clrb;
 
     PVMUTEX             mtx_prerender;          /* Used so that only one thread at a time may access the pre-
                                                  * rendering buffer for this video display.
@@ -79,7 +80,6 @@ static struct {
     size_t      used;
     PVMUTEX     vmutex;
 }                       video_monitor;
-
 
 /**
  * \return ZERO on success.
@@ -169,7 +169,7 @@ void video_stop( VIDEO v ) {
 
     vsid_found:
 
-    video_clear_screen(v);
+    free(v->clrb.ptr);
 
     /**
      * Shut down rendering/timing thread.
@@ -279,6 +279,8 @@ VIDEO video_start( int nframebuffer ) {
 
     if ( !(v->mtx_prerender = video_mutex_create()) ) goto vs_fail_rstty;
 
+    v->clrb.ptr = video_get_empty_buffer(v);
+
     v->active = 1;
 
     goto vsdone;                /* Success, jump past error crap and be done. */
@@ -356,31 +358,46 @@ void *video_get_empty_buffer( VIDEO v ) {
     return calloc(1, v->fix_info.smem_len);
 }
 
-void video_screen_white( VIDEO v ) {
-    int i = 0;
+void video_set_screen_color( VIDEO v, uint32_t color) {
+    int         i = 0;
+    uint64_t    c;
     if (v->px_count64 > 0) {
+        c = (color << 24 | color);
         for (; i < v->px_count64; i++)
-            v->ptr.ptr64[i] = _VWHITE64_;
+            v->clrb.ptr64[i] = c;
     } else {
         for (; i < v->px_count; i++)
-            v->ptr.ptr32[i] = 0xFFFFFFFF;
+            v->clrb.ptr32[i] = color;
     }
+    video_submit_frame(v, v->clrb.ptr);
+}
+
+void video_screen_white( VIDEO v ) {
+    video_set_screen_color(v, 0xFFFFFFFF);
 }
 
 void video_clear_screen( VIDEO v ) {
     int i = 0;
     if (v->px_count64 > 0) {
         for (; i < v->px_count64; i++)
-            v->ptr.ptr64[i] = 0;
+            v->clrb.ptr64[i] = 0;
     } else {
         for (; i < v->px_count; i++)
-            v->ptr.ptr32[i] = 0;
+            v->clrb.ptr32[i] = 0;
     }
+    video_submit_frame(v, v->clrb.ptr);
 }
 
 int video_is_active( VIDEO v ) {
     if (!v) return 0;
     if (v->active == 1) return 1;
+    return 0;
+}
+
+size_t video_get_pixel_count( VIDEO v ) {
+    if (v && video_is_active(v)) {
+        return v->px_count;
+    }
     return 0;
 }
 
@@ -400,13 +417,17 @@ int video_get_fb_var_screeninfo( VIDEO v, void *pdest, size_t buf_len ) {
     return 0;
 }
 
+
 int video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len ) {
     union px_pointer    d;
     int                 i;
     
     if (!pdest || !v->active) return -1;
+
     if (buf_len < v->fix_info.smem_len) return v->fix_info.smem_len;
+
     d.ptr = pdest;
+
     if (v->px_count64) {
         for (i = 0; i < v->px_count64; i++)
             d.ptr64[i] = v->ptr.ptr64[i];
@@ -416,6 +437,7 @@ int video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len ) {
     }
     return 0;
 }
+
 
 /*
  +================================================================================+
