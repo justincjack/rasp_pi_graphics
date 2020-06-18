@@ -6,9 +6,10 @@ To use:
 Download or clone this repo.
 
 You will need gcc to compile this.
-
-$ make
-$ sudo make install
+```bash
+make
+sudo make install
+```
 
 That's it.
 
