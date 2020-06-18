@@ -212,6 +212,23 @@ int         video_get_fb_var_screeninfo( VIDEO v, void *pdest, size_t buf_len );
  **/ 
 int         video_get_fb_fix_screeninfo( VIDEO v, void *pdest, size_t buf_len );
 
+
+/**
+ * Copies the current pixel/color bits displayed on the 
+ * display into the buffer "pdest"
+ * 
+ * \return int
+ * On success, this function returns ZERO.  If a NEGATIVE number
+ * is returned an error occured e.g. a NULL pointer was passed, 
+ * the VIDEO object wasn't initialized.  If a POSITIVE number
+ * is returned, it means the buffer given was too small and
+ * you must have at least as many bytes allocated as is returned
+ * by the function.
+ * 
+ **/ 
+int         video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len );
+  
+  
 #ifdef __cplusplus
 }
 #endif
