@@ -279,8 +279,6 @@ VIDEO video_start( int nframebuffer ) {
 
     if ( !(v->mtx_prerender = video_mutex_create()) ) goto vs_fail_rstty;
 
-    video_screen_white(v);
-
     v->active = 1;
 
     goto vsdone;                /* Success, jump past error crap and be done. */
