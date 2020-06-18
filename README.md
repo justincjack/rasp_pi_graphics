@@ -10,8 +10,18 @@ You will need gcc to compile this.
 make
 sudo make install
 ```
+and then, optionally (to view the library in action)
+
+```bash
+make test
+```
 
 That's it.
+
+You can run the test program (called "vidtest") with
+```bash
+$ ./vidtest
+```
 
 # Usage
 Using the library.
