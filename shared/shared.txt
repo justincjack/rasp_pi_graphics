@@ -1,0 +1,1 @@
+Folder into which shared lib will be placed.
