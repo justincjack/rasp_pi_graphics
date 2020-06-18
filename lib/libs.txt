@@ -1,0 +1,1 @@
+Folder into which static library will be placed
