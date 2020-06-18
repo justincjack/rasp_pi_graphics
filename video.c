@@ -402,6 +402,22 @@ int video_get_fb_var_screeninfo( VIDEO v, void *pdest, size_t buf_len ) {
     return 0;
 }
 
+int video_get_current_pixel_data( VIDEO v, void *pdest, size_t buf_len ) {
+    union px_pointer    d;
+    int                 i;
+    
+    if (!pdest || !v->active) return -1;
+    if (buf_len < v->fix_info.smem_len) return v->fix_info.smem_len;
+    d.ptr = pdest;
+    if (v->px_count64) {
+        for (i = 0; i < v->px_count64; i++)
+            d.ptr64[i] = v->ptr.ptr64[i];
+    } else {
+        for (i = 0; i < v->px_count; i++)
+            d.ptr32[i] = v->ptr.ptr32[i];
+    }
+    return 0;
+}
 
 /*
  +================================================================================+
