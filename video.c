@@ -319,7 +319,7 @@ int video_get_height( VIDEO v ) {
  **/ 
 void video_submit_frame( VIDEO v, void *buf_pixels ) {
     int                 i = 0;
-    union px_pointer    src;
+//     union px_pointer    src;
     
     if (!v->active) {
         fprintf(stderr, "libvideo/video_submit_frame(): ERROR - Video not active\n");
