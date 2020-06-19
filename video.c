@@ -318,17 +318,15 @@ int video_get_height( VIDEO v ) {
  * 
  **/ 
 void video_submit_frame( VIDEO v, void *buf_pixels ) {
-    int         i = 0;
-    uint32_t	*s3 = (uint32_t *)buf_pixels,
-		*d3 = v->ptr.ptr32;
-    uint64_t    *s6 = (uint64_t *)buf_pixels,
-		*d6 = v->ptr.ptr64;
+    int                 i = 0;
+    union px_pointer    src;
     
     if (!v->active) {
         fprintf(stderr, "libvideo/video_submit_frame(): ERROR - Video not active\n");
         return;
     }
 
+    src.ptr = buf_pixels;
 
     video_lock(v->mtx_prerender);
 
@@ -340,10 +338,10 @@ void video_submit_frame( VIDEO v, void *buf_pixels ) {
 
     if (v->px_count64) {
         for (i = 0; i < v->px_count64; i++)
-            *d6++ = *s6++;
+            v->ptr.ptr64[i] = src.ptr64[i];
     } else {
         for (i = 0; i < v->px_count; i++)
-            *d3++ = *s3++;
+            v->ptr.ptr32[i] = src.ptr32[i];
     }
     video_unlock(v->mtx_prerender);
 }
