@@ -107,12 +107,12 @@ int main( int argc, char **argv) {
                 screen_px_count,
                 screen_stride;
     void        *original_screen_image;
-    uint32_t    *dst,                               /* For blting operations - copying */
-                *src,                               /* boxes onto prerender buffer.    */
+    uint32_t    *dst,
                 *prerender_buffer,
                 color;
     struct box  boxes[3];
-    int         box_count               = 3;
+    int         box_count               = 3,
+                nsteps                  = 0;
     VIDEO       v;
 
 
@@ -120,6 +120,10 @@ int main( int argc, char **argv) {
 
     if (argc > 1) {
         nframebuffer = atoi(argv[1]);
+    }
+    
+    if (argc > 2) {
+        nsteps = atoi(argv[2]);
     }
 
     v = video_start(nframebuffer);
@@ -155,8 +159,8 @@ int main( int argc, char **argv) {
     boxes[0].height     = BOX_HEIGHT;
     boxes[0].x          = 0;
     boxes[0].y          = 0;
-    boxes[0].xdir       = 2;
-    boxes[0].ydir       = 2;
+    boxes[0].xdir       = 2+nsteps;
+    boxes[0].ydir       = 2+nsteps;
 
     /* Center */
     boxes[1].alpha      = 0x00;
@@ -167,7 +171,7 @@ int main( int argc, char **argv) {
     boxes[1].x          = ((screen_width/2) - (boxes[1].width/2));
     boxes[1].y          = 0;
     boxes[1].xdir       = 0;
-    boxes[1].ydir       = 3;
+    boxes[1].ydir       = 3+nsteps;
 
     /* Top-Right */
     boxes[2].alpha      = 0x7F;
@@ -177,8 +181,8 @@ int main( int argc, char **argv) {
     boxes[2].height     = BOX_HEIGHT;
     boxes[2].x          = ((screen_width - boxes[2].width) - 1);
     boxes[2].y          = ((screen_height - boxes[2].height) - 1);
-    boxes[2].xdir       = -2;
-    boxes[2].ydir       = 2;
+    boxes[2].xdir       = -(2+nsteps);
+    boxes[2].ydir       = 2+nsteps;
 
     /** Allocate a buffer to hold what's on the screen now. **/ 
     original_screen_image = video_get_empty_buffer(v);
