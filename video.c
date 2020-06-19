@@ -337,11 +337,18 @@ void video_submit_frame( VIDEO v, void *buf_pixels ) {
     }
 
     if (v->px_count64) {
+        uint64_t *d6 = v->ptr.ptr64,
+                 *s6 = (uint64_t *)buf_pixels;
         for (i = 0; i < v->px_count64; i++)
-            v->ptr.ptr64[i] = src.ptr64[i];
+            *d6++ = *s6++;
+            // v->ptr.ptr64[i] = src.ptr64[i];
     } else {
+        uint32_t *d3 = v->ptr.ptr32,
+                 *s3 = (uint32_t *)buf_pixels;
+
         for (i = 0; i < v->px_count; i++)
-            v->ptr.ptr32[i] = src.ptr32[i];
+            *d3++ = *s3++;
+            // v->ptr.ptr32[i] = src.ptr32[i];
     }
     video_unlock(v->mtx_prerender);
 }
