@@ -50,6 +50,8 @@ struct video_setup {
     struct termios      term_prev,
                         term_curr;
 
+    int                 tty_fd;
+
     size_t              px_count,
                         px_count64,
                         width,
@@ -187,6 +189,10 @@ void video_stop( VIDEO v ) {
 
 	tcsetattr(STDIN_FILENO, TCSANOW, &v->term_prev);
 
+    ioctl(v->tty_fd, KDSETMODE, KD_TEXT);
+
+    close(v->tty_fd);
+
     video_mutex_destroy(&v->mtx_prerender);
 
     /* Clear the structure */
@@ -281,6 +287,9 @@ VIDEO video_start( int nframebuffer ) {
 
     v->clrb.ptr = video_get_empty_buffer(v);
 
+    v->tty_fd = open("/dev/tty0", O_RDWR);
+    ioctl(v->tty_fd, KDSETMODE, KD_GRAPHICS);
+
     v->active = 1;
 
     goto vsdone;                /* Success, jump past error crap and be done. */
@@ -362,7 +371,7 @@ void video_set_screen_color( VIDEO v, uint32_t color) {
     int         i = 0;
     uint64_t    c;
     if (v->px_count64 > 0) {
-        c = ((((uint64_t)color) << 32) | color);
+        c = (color << 24 | color);
         for (; i < v->px_count64; i++)
             v->clrb.ptr64[i] = c;
     } else {
