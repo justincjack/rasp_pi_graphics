@@ -327,7 +327,8 @@ int video_get_height( VIDEO v ) {
  * 
  **/ 
 void video_submit_frame( VIDEO v, void *buf_pixels ) {
-    int                 i = 0;
+    int                 i       = 0,
+			ioc_ctl = 0;
     union px_pointer    src;
     
     if (!v->active) {
@@ -339,7 +340,7 @@ void video_submit_frame( VIDEO v, void *buf_pixels ) {
 
     video_lock(v->mtx_prerender);
 
-    if (ioctl(v->fbid, FBIO_WAITFORVSYNC, &v->var_info) != 0) {
+    if (ioctl(v->fbid, FBIO_WAITFORVSYNC, &ioc_ctl) != 0) {
         fprintf(stderr, "libvideo/video_submit_frame(): ERROR - FBIO_WAITFORVSYNC failed.\n");
         video_unlock(v->mtx_prerender);
         return;
