@@ -362,7 +362,7 @@ void video_set_screen_color( VIDEO v, uint32_t color) {
     int         i = 0;
     uint64_t    c;
     if (v->px_count64 > 0) {
-        c = (color << 32 | color);
+        c = ((((uint32_t)color) << 32) | color);
         for (; i < v->px_count64; i++)
             v->clrb.ptr64[i] = c;
     } else {
