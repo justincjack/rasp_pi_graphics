@@ -321,7 +321,7 @@ void video_submit_frame( VIDEO v, void *buf_pixels ) {
     int         i = 0;
     uint32_t	*s3 = (uint32_t *)buf_pixels,
 		*d3 = v->ptr.ptr32;
-    uint64_t    *s6 = (uint64_t *)buf_pixels;,
+    uint64_t    *s6 = (uint64_t *)buf_pixels,
 		*d6 = v->ptr.ptr64;
     
     if (!v->active) {
