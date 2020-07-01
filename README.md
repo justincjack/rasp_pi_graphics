@@ -1,6 +1,6 @@
 # Raspberry Pi Graphics
 Simple VBLANK synchronized Raspberry Pi 4 Framebuffer Rendering
-Simple and highly functional graphics rendering foundation for Raspberry Pi 4B.  It *may* work on other Raspberry Pis.  I haven't tested it on any others since I'm using the 4B for the projects I'm working on.  I suspect it will work just fine.
+Simple and highly functional graphics rendering foundation for Raspberry Pi 4B.  It *may* work on other Raspberry Pis.  I haven't tested it on any others since I'm using the 4B for the projects I'm working on.  The display on which I'm using it is a Raspberry Pi 7" touchscreen display.  It made a _major_ difference in the rendering of graphics.
 
 ### **To install:**
 Download or clone this repo.
