@@ -57,7 +57,7 @@ video_get_current_pixel_data(
         video_get_req_buffer_size(v));
 
 /* Fill your buffer with yellow pixels */
-for (; i < video_get_pixel_count(v); i++) {
+for (i = 0; i < video_get_pixel_count(v); i++) {
   prerenderbuff[i] = 0xFFFFFF00;
   /*                   ||||||^^-- 8 bits that represent the color BLUE.
                        |||| +---- 8 bits that represent the color GREEN.
